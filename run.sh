@@ -126,8 +126,8 @@ else
   . install-flatpaks.sh
 
   # Install dotfiles
-  echo "Installing dotfiles/configurations."
-  . dotfiles-install.sh
+#   echo "Installing dotfiles/configurations."
+#   . dotfiles-install.sh
 
   # Install TPM
   echo "Installing TPM and TMUX extensions."
