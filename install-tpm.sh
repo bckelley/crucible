@@ -28,4 +28,3 @@ tmux send-keys -t tpm_install_session C-s "I" C-m
 tmux attach -t tpm_install_session
 
 exit 0
-
