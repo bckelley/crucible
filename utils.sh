@@ -43,7 +43,7 @@ install_packages() {
   echo "Packages to install: ${to_install[@]}"
 
   if [ ${#to_install[@]} -ne 0 ]; then
-  
+
     if yay -Ss "${to_install[@]}"; then
         echo "Installing: ${to_install[*]}"
         yay -S --noconfirm "${to_install[@]}"
@@ -69,7 +69,6 @@ install_packages() {
   else
     echo "No new packages to install." # Added for clarity
   fi
-
 #   for pkg in "${packages[@]}"; do
 #     if ! is_installed "$pkg" && ! is_group_installed "$pkg"; then
 #       to_install+=("$pkg")
@@ -81,3 +80,27 @@ install_packages() {
 #     yay -S --noconfirm "${to_install[@]}"
 #   fi
 } 
+
+install_fonts() {
+    local fonts=("$@")
+    local to_install=()
+
+    for font in "${fonts[@]}"; do
+        if ! is_installed "$font" && ! is_group_installed "$font"; then
+            to_install+=("$font")
+        else
+            echo "$font will NOT be added to to_install list."
+        fi
+    done
+
+    if [ ${#to_install[@]} -ne 0 ]; then
+        echo "Installing: ${to_install[*]}"
+        getnf -i "${to_install[@]}"
+        fc-cache
+        echo "Successfully installed/updated! ${#to_install}"
+    else
+        echo "No new fonts to install."
+    fi
+
+
+}

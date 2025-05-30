@@ -100,7 +100,7 @@ else
   install_packages "${MEDIA[@]}"
   
   echo "Installing fonts..."
-  install_packages "${FONTS[@]}"
+  install_fonts "${FONTS[@]}"
   
   # Enable services
   echo "Configuring services..."
