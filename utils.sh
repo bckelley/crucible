@@ -20,36 +20,52 @@ install_packages() {
 
   # Inside the loop in install_packages
   for pkg in "${packages[@]}"; do
-  echo "--- Checking: $pkg ---"
-  if is_installed "$pkg"; then
-      echo "$pkg IS installed (is_installed)"
-  else
-      echo "$pkg IS NOT installed (is_installed)"
-  fi
-  
-  if is_group_installed "$pkg"; then
-      echo "$pkg IS an installed group (is_group_installed)"
-  else
-      echo "$pkg IS NOT an installed group (is_group_installed)"
-  fi
-  
-  if ! is_installed "$pkg" && ! is_group_installed "$pkg"; then
-      echo "Adding $pkg to to_install list."
-      to_install+=("$pkg")
-  else
-      echo "$pkg will NOT be added to to_install list."
-  fi
+    echo "--- Checking: $pkg ---"
+    if is_installed "$pkg"; then
+        echo "$pkg IS installed (is_installed)"
+    else
+        echo "$pkg IS NOT installed (is_installed)"
+    fi
+    
+    if is_group_installed "$pkg"; then
+        echo "$pkg IS an installed group (is_group_installed)"
+    else
+        echo "$pkg IS NOT an installed group (is_group_installed)"
+    fi
+    
+    if ! is_installed "$pkg" && ! is_group_installed "$pkg"; then
+        echo "Adding $pkg to to_install list."
+        to_install+=("$pkg")
+    else
+        echo "$pkg will NOT be added to to_install list."
+    fi
   done
   echo "Packages to install: ${to_install[@]}"
 
   if [ ${#to_install[@]} -ne 0 ]; then
-    echo "Installing: ${to_install[*]}"
-    if yay -S --noconfirm "${to_install[@]}"; then
-      echo "Successfully installed/updated: ${to_install[*]}"
+  
+    if yay -Ss "${to_install[@]}"; then
+        echo "Installing: ${to_install[*]}"
+        yay -S --noconfirm "${to_install[@]}"
+        # TODO: check if the package is installed after installation
+
+        echo "Successfully installed/updated: ${to_install[*]}"
+    elif pacman -Ss "${to_install[@]}"; then
+        echo "Installing: ${to_install[*]}"
+        pacman -S --noconfirm "${to_install[@]}"
+        # TODO: check if the package is installed after installation
+
+        echo "Successfully installed/updated: ${to_install[*]}"
     else
-      echo "ERROR: yay command failed for: ${to_install[*]}" >&2
-      # Optionally, exit with an error code: exit 1
+        echo "ERROR: installation failed for: ${to_install[*]}" >&2
     fi
+
+    # if yay -S --noconfirm "${to_install[@]}"; then
+    #   echo "Successfully installed/updated: ${to_install[*]}"
+    # else
+    #   echo "ERROR: yay command failed for: ${to_install[*]}" >&2
+    #   # Optionally, exit with an error code: exit 1
+    # fi
   else
     echo "No new packages to install." # Added for clarity
   fi
